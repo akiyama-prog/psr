@@ -1,5 +1,8 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
+$whoops = new \Whoops\Run;
+$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+$whoops->register();
 
 $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
 
@@ -12,4 +15,7 @@ $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
 
 $serverRequest = $creator->fromGlobals();
 
-dd($serverRequest->getUri());
+$path = $serverRequest->getUri()->getPath();
+if ($path === '/now') {
+    echo date('Y年m月d日 H時i分s秒');
+}
