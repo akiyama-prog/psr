@@ -12,4 +12,4 @@ $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
 
 $serverRequest = $creator->fromGlobals();
 
-var_dump($serverRequest->getUri());
+dd($serverRequest->getUri());
