@@ -1,8 +1,7 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
-$whoops = new \Whoops\Run();
-$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+$whoops = new \Whoops\Run;
+$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 $whoops->register();
 
 $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
@@ -18,5 +17,16 @@ $serverRequest = $creator->fromGlobals();
 
 $path = $serverRequest->getUri()->getPath();
 if ($path === '/now') {
-    echo date('Y年m月d日 H時i分s秒');
+    // $response = $psr17Factory->createResponse(200)
+    //     ->withBody(
+    //         $psr17Factory->createStream(date('Y年m月d日 H時i分s秒'))
+    //     );
+    $handler = new \mypsr\MyPsr\Http\Handler\DateAction();
+    $response = $handler->handle($serverRequest);
+} else {
+    $response = $psr17Factory->createResponse(404)
+        ->withBody(
+            $psr17Factory->createStream('そのページはありません')
+        );
 }
+(new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter())->emit($response);
